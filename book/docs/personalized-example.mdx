@@ -1,0 +1,186 @@
+---
+id: personalized-example
+title: Example Personalized Chapter
+sidebar_position: 2
+---
+
+import ChapterControls from '@site/src/components/ChapterControls/ChapterControls';
+import React, { useState } from 'react';
+
+export const PersonalizedChapter = () => {
+  const [displayContent, setDisplayContent] = useState(null);
+  
+  const originalMarkdown = `
+# Example Personalized Chapter
+
+Welcome to this example chapter that demonstrates personalization and translation features!
+
+## What is This?
+
+This chapter shows how you can:
+- **Personalize content** based on your experience level
+- **Translate** the content to Urdu
+- **Switch back** to the original at any time
+
+## How It Works
+
+### Personalization
+
+When you click "🎯 Personalize for Me":
+1. The system checks your user profile
+2. Determines your experience level (beginner/intermediate/advanced/expert)
+3. Rewrites the content to match your level
+4. Caches the result for faster future access
+
+**Example complexity levels:**
+- **Beginner**: Simple explanations, more examples, step-by-step guides
+- **Intermediate**: Balanced technical depth, some assumptions
+- **Advanced**: Technical details, fewer basic explanations
+- **Expert**: Advanced concepts, minimal hand-holding
+
+### Translation
+
+When you click "🌐 Translate to Urdu":
+1. The system translates the entire chapter
+2. Preserves code blocks and technical terms
+3. Caches the translation for reuse
+4. Works even without login!
+
+## Try It Now!
+
+1. **If you haven't signed up yet**: Click the "Translate to Urdu" button below (works without login)
+2. **If you have an account**: Login and click "Personalize for Me" to see content adjusted to your level
+3. **Click "Show Original"** to return to this version
+
+## Technical Implementation
+
+This is implemented using:
+- **Frontend**: React state management with ChapterControls component
+- **Backend**: FastAPI with PostgreSQL database
+- **AI**: OpenAI GPT-4o-mini (currently in demo mode due to quota)
+- **Caching**: MD5-based content hashing for efficient storage
+
+## Code Example
+
+\`\`\`python
+# Example: Calculating Fibonacci numbers
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Usage
+result = fibonacci(10)
+print(f"The 10th Fibonacci number is: {result}")
+\`\`\`
+
+:::tip
+Try personalizing this chapter! If you're a beginner, the AI might add more explanations about recursion. If you're an expert, it might discuss time complexity and optimization.
+:::
+
+## What's Next?
+
+- Explore other chapters
+- Try the chatbot at the bottom right
+- Customize your learning experience!
+  `;
+
+  return (
+    <div>
+      <ChapterControls
+        chapterPath="/docs/personalized-example"
+        originalContent={originalMarkdown}
+        onContentUpdate={(newContent) => setDisplayContent(newContent)}
+      />
+      {displayContent ? (
+        <div dangerouslySetInnerHTML={{ __html: displayContent }} />
+      ) : (
+        <div>
+          <h1>Example Personalized Chapter</h1>
+          <p>Welcome to this example chapter that demonstrates personalization and translation features!</p>
+          
+          <h2>What is This?</h2>
+          <p>This chapter shows how you can:</p>
+          <ul>
+            <li><strong>Personalize content</strong> based on your experience level</li>
+            <li><strong>Translate</strong> the content to Urdu</li>
+            <li><strong>Switch back</strong> to the original at any time</li>
+          </ul>
+          
+          <h2>How It Works</h2>
+          
+          <h3>Personalization</h3>
+          <p>When you click "🎯 Personalize for Me":</p>
+          <ol>
+            <li>The system checks your user profile</li>
+            <li>Determines your experience level (beginner/intermediate/advanced/expert)</li>
+            <li>Rewrites the content to match your level</li>
+            <li>Caches the result for faster future access</li>
+          </ol>
+          
+          <p><strong>Example complexity levels:</strong></p>
+          <ul>
+            <li><strong>Beginner</strong>: Simple explanations, more examples, step-by-step guides</li>
+            <li><strong>Intermediate</strong>: Balanced technical depth, some assumptions</li>
+            <li><strong>Advanced</strong>: Technical details, fewer basic explanations</li>
+            <li><strong>Expert</strong>: Advanced concepts, minimal hand-holding</li>
+          </ul>
+          
+          <h3>Translation</h3>
+          <p>When you click "🌐 Translate to Urdu":</p>
+          <ol>
+            <li>The system translates the entire chapter</li>
+            <li>Preserves code blocks and technical terms</li>
+            <li>Caches the translation for reuse</li>
+            <li>Works even without login!</li>
+          </ol>
+          
+          <h2>Try It Now!</h2>
+          <ol>
+            <li><strong>If you haven't signed up yet</strong>: Click the "Translate to Urdu" button below (works without login)</li>
+            <li><strong>If you have an account</strong>: Login and click "Personalize for Me" to see content adjusted to your level</li>
+            <li><strong>Click "Show Original"</strong> to return to this version</li>
+          </ol>
+          
+          <h2>Technical Implementation</h2>
+          <p>This is implemented using:</p>
+          <ul>
+            <li><strong>Frontend</strong>: React state management with ChapterControls component</li>
+            <li><strong>Backend</strong>: FastAPI with PostgreSQL database</li>
+            <li><strong>AI</strong>: OpenAI GPT-4o-mini (currently in demo mode due to quota)</li>
+            <li><strong>Caching</strong>: MD5-based content hashing for efficient storage</li>
+          </ul>
+          
+          <h2>Code Example</h2>
+          <pre><code className="language-python">{`# Example: Calculating Fibonacci numbers
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Usage
+result = fibonacci(10)
+print(f"The 10th Fibonacci number is: {result}")`}</code></pre>
+          
+          <div className="admonition admonition-tip alert alert--success">
+            <div className="admonition-heading">
+              <h5><span className="admonition-icon">💡</span>tip</h5>
+            </div>
+            <div className="admonition-content">
+              <p>Try personalizing this chapter! If you're a beginner, the AI might add more explanations about recursion. If you're an expert, it might discuss time complexity and optimization.</p>
+            </div>
+          </div>
+          
+          <h2>What's Next?</h2>
+          <ul>
+            <li>Explore other chapters</li>
+            <li>Try the chatbot at the bottom right</li>
+            <li>Customize your learning experience!</li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+<PersonalizedChapter />
