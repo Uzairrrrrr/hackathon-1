@@ -95,28 +95,28 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Book',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'Start Reading',
+              to: '/intro',
             },
           ],
         },
         {
-          title: 'Community',
+          title: 'Features',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'AI Chatbot',
+              to: '/intro',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'Translation',
+              to: '/intro',
             },
             {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'Personalization',
+              to: '/intro',
             },
           ],
         },
@@ -124,12 +124,12 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'GitHub',
+              href: 'https://github.com/Uzairrrrrr/hackathon-1',
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: 'Get Gemini API Key',
+              href: 'https://aistudio.google.com/apikey',
             },
           ],
         },
