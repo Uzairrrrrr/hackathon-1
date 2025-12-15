@@ -16,8 +16,17 @@ class RAGAgent:
         if self.ai_provider == "gemini":
             # Configure Gemini (FREE TIER)
             genai.configure(api_key=settings.gemini_api_key)
-            self.model = genai.GenerativeModel(settings.gemini_model)
-            logger.info(f"Initialized Gemini model: {settings.gemini_model}")
+            # Candidate models - fallback only if primary unavailable
+            self._gemini_candidates = [
+                settings.gemini_model,
+                "gemini-2.5-flash",
+                "gemini-2.0-flash",
+                "gemini-flash-latest",
+                "gemini-2.5-pro",
+            ]
+            # Lazily initialize; will be set on first successful call
+            self.model = genai.GenerativeModel(self._gemini_candidates[0])
+            logger.info(f"Initialized Gemini with preferred model: {self._gemini_candidates[0]}")
         else:
             # OpenAI fallback
             from openai import OpenAI
@@ -88,7 +97,7 @@ Guidelines:
         # Generate response based on provider
         try:
             if self.ai_provider == "gemini":
-                # Use Gemini
+                # Use Gemini, with fallback across candidate models on 404/not-supported
                 prompt = f"{system_message}\n\nUser: {user_message}\n\nAssistant:"
                 
                 # Add chat history if available
@@ -98,17 +107,37 @@ Guidelines:
                         for msg in chat_history[-5:]
                     ])
                     prompt = f"{system_message}\n\nChat History:\n{history_text}\n\nUser: {user_message}\n\nAssistant:"
-                
-                response = self.model.generate_content(
-                    prompt,
-                    generation_config={
-                        'temperature': 0.7,
-                        'top_p': 0.95,
-                        'top_k': 40,
-                        'max_output_tokens': 1000,
-                    }
-                )
-                return response.text
+
+                last_error: Optional[Exception] = None
+                for model_name in self._gemini_candidates:
+                    try:
+                        self.model = genai.GenerativeModel(model_name)
+                        response = self.model.generate_content(
+                            prompt,
+                            generation_config={
+                                'temperature': 0.7,
+                                'top_p': 0.95,
+                                'top_k': 40,
+                                'max_output_tokens': 1000,
+                            }
+                        )
+                        if model_name != self._gemini_candidates[0]:
+                            logger.info(f"Switched Gemini model to: {model_name}")
+                        return response.text
+                    except Exception as me:
+                        msg = str(me).lower()
+                        last_error = me
+                        # Try next candidate only for not-found/unsupported methods
+                        if "404" in msg or "not found" in msg or "not supported" in msg:
+                            logger.warning(f"Gemini model '{model_name}' not usable: {me}")
+                            continue
+                        else:
+                            # Other errors (quota, auth, etc.) -> break and handle below
+                            raise
+                # If we exhausted candidates, raise last error
+                if last_error:
+                    raise last_error
+                raise RuntimeError("No Gemini model candidates available")
             else:
                 # Use OpenAI
                 messages = [{"role": "system", "content": system_message}]

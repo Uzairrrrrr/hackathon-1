@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './ChapterControls.module.css';
+import useApiBaseUrl from '@site/src/hooks/useApiBaseUrl';
 
 interface ChapterControlsProps {
   chapterPath: string;
@@ -14,6 +15,7 @@ export default function ChapterControls({
   onContentUpdate,
 }: ChapterControlsProps) {
   const { user, token } = useAuth();
+  const apiBaseUrl = useApiBaseUrl();
   const [personalizing, setPersonalizing] = useState(false);
   const [translating, setTranslating] = useState(false);
   const [error, setError] = useState('');
@@ -31,7 +33,7 @@ export default function ChapterControls({
     setPersonalizing(true);
 
     try {
-      const response = await fetch('http://localhost:8000/content/personalize', {
+      const response = await fetch(`${apiBaseUrl}/api/v1/content/personalize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +74,7 @@ export default function ChapterControls({
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch('http://localhost:8000/content/translate', {
+      const response = await fetch(`${apiBaseUrl}/api/v1/content/translate`, {
         method: 'POST',
         headers,
         body: JSON.stringify({

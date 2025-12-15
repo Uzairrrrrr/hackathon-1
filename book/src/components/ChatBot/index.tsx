@@ -16,7 +16,11 @@ interface ChatBotProps {
   apiBaseUrl?: string;
 }
 
-export default function ChatBot({ apiBaseUrl = 'http://localhost:8000' }: ChatBotProps) {
+import useApiBaseUrl from '@site/src/hooks/useApiBaseUrl';
+
+export default function ChatBot({ apiBaseUrl }: ChatBotProps) {
+  const resolvedBaseUrl = useApiBaseUrl();
+  const baseUrl = apiBaseUrl ?? resolvedBaseUrl;
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -58,7 +62,7 @@ export default function ChatBot({ apiBaseUrl = 'http://localhost:8000' }: ChatBo
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/chat`, {
+      const response = await fetch(`${baseUrl}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

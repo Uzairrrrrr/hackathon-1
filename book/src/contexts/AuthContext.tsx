@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import useApiBaseUrl from '@site/src/hooks/useApiBaseUrl';
 
 interface User {
   id: number;
@@ -48,6 +49,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const apiBaseUrl = useApiBaseUrl();
 
   useEffect(() => {
     // Load token and user from localStorage
@@ -61,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+    const response = await fetch(`${apiBaseUrl}/api/v1/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -79,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signup = async (userData: SignupData) => {
-    const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+    const response = await fetch(`${apiBaseUrl}/api/v1/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),

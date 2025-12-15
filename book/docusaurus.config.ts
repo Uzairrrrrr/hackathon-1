@@ -54,6 +54,12 @@ const config: Config = {
     ],
   ],
 
+  // Custom fields available on the client via useDocusaurusContext
+  // API base URL can be overridden at build time: API_BASE_URL=https://api.example.com npm run build
+  customFields: {
+    apiBaseUrl: process.env.API_BASE_URL ?? 'http://localhost:8000',
+  },
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
