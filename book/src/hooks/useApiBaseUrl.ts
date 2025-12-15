@@ -26,7 +26,17 @@ export function useApiBaseUrl(): string {
   const defaultLocal = 'http://localhost:8000';
   const inferred = (hostname === 'localhost' || hostname === '127.0.0.1') ? defaultLocal : undefined;
 
-  return (fromLocalStorage || fromWindow || fromConfig || inferred || defaultLocal) as string;
+  // Resolve in priority order
+  let resolved = (fromLocalStorage || fromWindow || fromConfig || inferred || defaultLocal) as string;
+
+  // Guard: avoid using same-origin relative path in production (e.g., '' causing /chat on github.io)
+  // Always return an absolute URL; fallback to defaultLocal if not absolute.
+  const isAbsolute = typeof resolved === 'string' && /^(http|https):\/\//.test(resolved);
+  if (!isAbsolute) {
+    resolved = defaultLocal;
+  }
+
+  return resolved;
 }
 
 export default useApiBaseUrl;
