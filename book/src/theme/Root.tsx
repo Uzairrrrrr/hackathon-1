@@ -9,6 +9,10 @@ import useApiBaseUrl from '@site/src/hooks/useApiBaseUrl';
 export default function Root({children}) {
   const {siteConfig} = useDocusaurusContext();
   const apiBaseUrl = useApiBaseUrl();
+  if (typeof window !== 'undefined') {
+    // eslint-disable-next-line no-console
+    console.info('[AI-Driven Book] Resolved API base URL from Root:', apiBaseUrl);
+  }
   
   return (
     <AuthProvider>

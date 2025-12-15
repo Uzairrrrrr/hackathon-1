@@ -20,7 +20,14 @@ import useApiBaseUrl from '@site/src/hooks/useApiBaseUrl';
 
 export default function ChatBot({ apiBaseUrl }: ChatBotProps) {
   const resolvedBaseUrl = useApiBaseUrl();
-  const baseUrl = apiBaseUrl ?? resolvedBaseUrl;
+  // Extra guard: ensure absolute URL and never fall back to same-origin
+  const pick = apiBaseUrl || resolvedBaseUrl;
+  const baseUrl = (pick && /^(http|https):\/\//.test(pick)) ? pick : resolvedBaseUrl;
+  if (typeof window !== 'undefined') {
+    // Helpful runtime log for debugging deployments
+    // eslint-disable-next-line no-console
+    console.info('[AI-Driven Book] API base URL:', baseUrl);
+  }
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
