@@ -20,13 +20,22 @@ export function useApiBaseUrl(): string {
     ? (window as any).__API_BASE_URL__
     : undefined;
 
-  const fromConfig = (siteConfig?.customFields as any)?.apiBaseUrl as string | undefined;
+  const custom = (siteConfig?.customFields as any) || {};
+  const fromConfig = custom?.apiBaseUrl as string | undefined;
+  const sameOriginApi = !!custom?.sameOriginApi;
 
   const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
   const defaultLocal = 'http://localhost:8000';
   const inferred = (hostname === 'localhost' || hostname === '127.0.0.1') ? defaultLocal : undefined;
 
   // Resolve in priority order
+  if (sameOriginApi && typeof window !== 'undefined') {
+    const origin = window.location.origin;
+    if (origin && /^(http|https):\/\//.test(origin)) {
+      return origin;
+    }
+  }
+
   let resolved = (fromLocalStorage || fromWindow || fromConfig || inferred || defaultLocal) as string;
 
   // Guard: avoid using same-origin relative path in production (e.g., '' causing /chat on github.io)

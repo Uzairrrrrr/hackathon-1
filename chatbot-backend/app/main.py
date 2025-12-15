@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from datetime import datetime
 import logging
+from starlette.staticfiles import StaticFiles
 
 from app.config import settings
 from app.api import chat, auth, content
@@ -36,6 +37,10 @@ app.add_middleware(
 app.include_router(chat.router)
 app.include_router(auth.router)
 app.include_router(content.router)
+
+# Serve built Docusaurus site from /app/static (copied in Docker image)
+# This must be added last to avoid shadowing API routes.
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 @app.on_event("startup")

@@ -58,6 +58,9 @@ const config: Config = {
   // API base URL can be overridden at build time: API_BASE_URL=https://api.example.com npm run build
   customFields: {
     apiBaseUrl: process.env.API_BASE_URL ?? 'http://localhost:8000',
+    // When true, the frontend will use window.location.origin as API base.
+    // Enable this only when the API is served from the same host (single container).
+    sameOriginApi: process.env.SAME_ORIGIN_API === '1' || process.env.SAME_ORIGIN_API === 'true',
   },
 
   themeConfig: {
